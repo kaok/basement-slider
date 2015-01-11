@@ -14,5 +14,5 @@ defined('ABSPATH') or die();
 add_action( 'basement_loaded', 'basement_slider_init', 999 );
 
 function basement_slider_init() {
-	require 'slide.php';
+	require 'modules/slide/slide.php';
 }

@@ -6,6 +6,7 @@ define( 'BASEMENT_SLIDER_TEXTDOMAIN', 'basement_slider' );
 class Basement_Slide extends Basement_Cpt {
 	
 	private static $instance = null;
+	private static $url = null;
 
 	protected $post_type = 'slide';
 	protected $show_thumbnail_admin_column = true;
@@ -18,6 +19,16 @@ class Basement_Slide extends Basement_Cpt {
 
 	public static function init() {
 		self::instance();
+		Basement_Asset::add_footer_script(
+			BASEMENT_SLIDER_TEXTDOMAIN . '_caroufredsel_js', 
+			self::url() . '/assets/javascript/jquery.carouFredSel-6.2.1-packed.js', 
+			array( 'jquery' )
+		);
+		Basement_Asset::add_footer_script(
+			BASEMENT_SLIDER_TEXTDOMAIN . '_script', 
+			self::url() . '/assets/javascript/production.min.js', 
+			BASEMENT_SLIDER_TEXTDOMAIN . '_caroufredsel_js'
+		);
 	}
 
 	public static function instance() {
@@ -38,7 +49,7 @@ class Basement_Slide extends Basement_Cpt {
 			'group' => BASEMENT_SHORTCODES_TEXTDOMAIN,
 			'class' => 'Basement_Shortcode_Slider',
 			'title' => __( 'Slider', BASEMENT_SHORTCODES_TEXTDOMAIN ),
-			'path' => __DIR__ . '/shortcodes/slider.php'
+			'path' => __DIR__ . '/../shortcodes/slider.php'
 		);
 		return $config;
 	} 
@@ -47,6 +58,13 @@ class Basement_Slide extends Basement_Cpt {
 		$config[ BASEMENT_SHORTCODES_TEXTDOMAIN ] = __( 'Slider', BASEMENT_SHORTCODES_TEXTDOMAIN );
 		return $config;
 	} 
+
+	public static function url() {
+		if ( null === self::$url ) {
+			self::$url = Basement_Url::of_file( realpath( __DIR__ . '/../' ) );
+		}
+		return self::$url;
+	}
 
 	protected function fill_post_type_args() {
 		$this->post_type_args = apply_filters( 
